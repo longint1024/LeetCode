@@ -63,6 +63,14 @@ vector<int> b(a.begin(), a.begin()+3) ;        //将a向量中从第0个到第2�
 
 主要要注意考虑全面，用long long来储存可能越界的数值并判断越界与否，需要注意的就是-maxlongint取绝对值之后是溢出的，操作数就应该直接用64位整型。
 
+
+
+**T8****字符串转数字****(String to number atoi) //python3
+
+【思路】打表
+
+【注意】①python取区间是左闭右开的②corner condition优先考虑③python如果要去掉指定位置的字符，不要用replace直接置换指定字符，有可能把别的位置相同字符都置换掉了，.strip一样的道理
+
  
 
 **T9****回文数****(Palindrome Number) //C++**
