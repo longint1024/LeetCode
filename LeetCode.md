@@ -179,11 +179,43 @@ vector<int> b(a.begin(), a.begin()+3) ;        //将a向量中从第0个到第2�
 
 
 
-**T18****去除链表倒数N位数****(Remove Nth Node from End of List) //python3**
+**T19****去除链表倒数N位数****(Remove Nth Node from End of List) //python3**
 
-【思路】直接做就好了，英语翻译题
+【思路】英语翻译题
 
 【注意】要细心，设计链表的题，注意头结点的处理。另外corner conditon：输入的链表只有一个元素怎么办？
+
+
+
+**T20****有效括号****(Valid Parentheses) //python3**
+
+【思路】第一眼栈
+
+【注意】空栈单独判断
+
+
+
+**T21****合并有序链表****(Merge Two Sorted Lists) //python3**
+
+【思路】英语翻译
+
+【学习】python不需要new，直接调用构造函数就行了，非常方便
+
+
+
+**T22****生产括号****(Generate Parenthese) //python3**
+
+【思路】栈混洗，Catalan数，递归生成即可
+
+【注意】我尝试了将ans放在全局变量，发现它似乎会随着测试数据的更迭而变化（append的话会把上一个数据的结果也保存下来，所以最好不要放全局）
+
+
+
+**T50****快速幂****(Pow(x,n)) //python3**
+
+【思路】英语翻译
+
+【启示】人生苦短，我用python（真就拒绝重复造轮子呗）
 
 
 
