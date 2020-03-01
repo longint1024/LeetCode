@@ -211,6 +211,95 @@ vector<int> b(a.begin(), a.begin()+3) ;        //将a向量中从第0个到第2�
 
 
 
+**T26****有序列表去重****(Remove Duplicates from Sorted Array) //python3**
+
+【思路】英语翻译
+
+【注意】时刻注意下表是否越界
+
+
+
+**T27****去除元素****(Remove Element) //python3**
+
+【思路】英语翻译
+
+【注意】时刻注意下表是否越界
+
+
+
+**T28****实现 strStr()****(Inplement strStr()) //python3**
+
+【思路】英语翻译，人生苦短我用python，python的字符串集成了.find函数，重载了查找字符串的功能！
+
+
+
+**T35****寻找插入位置****(Search Insert Position) //python3**
+
+【思路】分治法，cornor condition是输入空列表，one pass
+
+
+
+**T38****数数****(Count and Say) //python3**
+
+【思路】递推，能不用递归尽量不用，想了半天发现实在是没有使用递归的必要性，无论是思维量还是运算量上感觉都省不到哪儿去。
+
+
+
+**T46****排列****(Permutations) //python3**
+
+【思路】当然是递归，全排列应该只能用递归做，毕竟自带n阶乘的复杂度。让我觉得困难的地方在于定义什么参数？用什么方法来储存答案？
+
+【注意】python的许多自带函数都是对自身进行操作的（准确来讲叫过程？），很多时候需要不改变自身而幅值给别人的话需要注意
+
+【发现】python的OOP原理和C++几乎一模一样，像这道题，我发现在Solution类里定义一个变量，然后用加一个初始化函数，在一个类里都能用，猜想应该是默认public的吧。
+
+
+
+**T47****排列二****(Permutations 2) //python3**
+
+【思路】本着不重复造轮子的原则把上道题的代码粘贴过来，循环的时候注意重复的元素不进行递归调用，定义一个集合来判别重复即可。
+
+
+
+**T48****旋转图像****(Rotate Image) //python3**
+
+【思路】四个数的置换，本题强调原地操作，还是很有意思的。
+
+
+
+**T49****相同字母异序词****(Group Anagrams) //python3**
+
+【思路】Hash，这题我尝试了自己的想法，卡时间过：将字母的ASCII值加上一个大质数，然后相乘，作为哈希值。如果不加这个大质数，最后一个点会过不掉，因为26个字母的ASCII值并不互质，总是会出一些问题。
+
+【借鉴】别人的代码，正规哈希
+
+```python
+class Solution(object):
+
+    def groupAnagrams(self, strs):
+        """ 
+        :type strs: List[str]
+        :rtype: List[List[str]]
+        """ 
+
+        anagram_hash = {}
+        anagram_list = []
+
+        for s in strs: 
+            if "".join(sorted(s)) in anagram_hash:
+                anagram_hash["".join(sorted(s))].append(s)
+            else:
+                anagram_hash["".join(sorted(s))] = []
+                anagram_hash["".join(sorted(s))].append(s)
+
+        for k, v in anagram_hash.items(): 
+            anagram_list.append(v)
+
+        return anagram_list
+```
+
+
+
 **T50****快速幂****(Pow(x,n)) //python3**
 
 【思路】英语翻译
