@@ -233,6 +233,12 @@ vector<int> b(a.begin(), a.begin()+3) ;        //将a向量中从第0个到第2�
 
 
 
+**T29****两数相除****(Divide Two Intergers) //python3**
+
+本题相当无趣，主要是负数情况的讨论，非常boring
+
+
+
 **T35****寻找插入位置****(Search Insert Position) //python3**
 
 【思路】分治法，cornor condition是输入空列表，one pass
