@@ -211,7 +211,15 @@ vector<int> b(a.begin(), a.begin()+3) ;        //将a向量中从第0个到第2�
 
 
 
-**T26****有序列表去重****(Remove Duplicates from Sorted Array) //python3**
+**T23合并k个排序链表 //python3**
+
+【思路】
+
+解法1：分治，按归并排序的思路来是最容易想到的办法，基础操作是双链表的合并。
+
+
+
+**T26有序列表去重(Remove Duplicates from Sorted Array) //python3**
 
 【思路】英语翻译
 
