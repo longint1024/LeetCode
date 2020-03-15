@@ -1,6 +1,6 @@
 # LeetCode
 
-## 平时笔记
+## Daily-Practice
 
 **T1****两数之和（****Two Sum****）****//C++**
 
@@ -217,7 +217,37 @@ vector<int> b(a.begin(), a.begin()+3) ;        //将a向量中从第0个到第2�
 
 解法1：分治，按归并排序的思路来是最容易想到的办法，基础操作是双链表的合并。
 
-解法2：优先队列，将k个链表的表头元素维护成一个小头堆，堆顶出队，对应链表的next入队。
+解法2：优先队列，将k个链表的表头元素维护成一个小头堆，堆顶出队，对应链表的next入队。注意python3有queue模块，这个代码是从力扣的官方解答中拔出来的，当然我做了小的改动。python原版本引用模块是Queue，注意Q大写，另外加入优先队列的元组中可以有链表。python3好像不能加入含有链表的元组，所以我改成了链表序号k。
+
+```python
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+from queue import PriorityQueue
+
+class Solution:
+    def mergeKLists(self, lists: List[ListNode]) -> ListNode:
+        if lists == []:
+            return []
+        head = point = ListNode(0)
+        q = PriorityQueue()
+        for k in range(len(lists)):
+            if lists[k]:
+                q.put((lists[k].val, k))
+        while not q.empty():
+            val, num = q.get()
+            point.next = ListNode(val)
+            point = point.next
+            hh = lists[num]
+            tmp = hh.next
+            lists[num] = tmp
+            if lists[num]:
+                q.put((lists[num].val, num))
+        return head.next
+```
 
 
 
@@ -411,6 +441,12 @@ class Solution(object):
 
 
 
+**T695 岛屿的最大面积 //python3**
+
+英语翻译题。我做这种题的话，一般都是广度优先搜索，直接拓展开来求最大连通块。这倒是让我想到了写扫雷的逻辑的时候做的事情。
+
+
+
 **T771珠宝和石头(Jewels and Stones) //C++**
 
 这题没什么好说的，有点浪费时间。不需要Hash，直接索引就行了。4ms过了，看别人的代码有0ms过的，快在他用了STL里面的vector，不知道空间会不会省，但时间足够快。
@@ -445,11 +481,11 @@ Python的字符串操作和MATLAB非常类似，len()可以直接得到字符串
 
 
 
-## 周赛题
+## Weekly-Contest
 
 ### 2020/3/8
 
-本周的比赛是在美服参加的，对应国服T5353和T5354
+本周的比赛是在美服参加的，对应国服T5353和T5354（后来发现国服更新的慢，确实是美服的题号）
 
 score: 7, time: 59:33, rank: 3051 / 6242
 
@@ -469,7 +505,129 @@ score: 7, time: 59:33, rank: 3051 / 6242
 
 
 
-## 后记
+### 2020/3/15
+
+本周比赛回到国服进行，预计之后应该都会在国服参赛了
+
+score: 11, time: 58:15+5min=1:03:15, rank: 747 / 3714 || 2930 / 10047
+
+**T1380 矩阵中的幸运数 //python3**
+
+其实我感觉类似这种题，不用过多地去想如何优化，直接翻译就好了，一般不会超时
+
+**T1381 设计一个支持增量操作的栈 //python3**
+
+本题需要熟悉类和对象的基本操作，另外用数组实现一下基本数据类型：栈。感觉这题还挺有意思。
+
+【注意】类的构造函数，每次提交需要注意刷新相关变量。已经不止一次因为这个丢分了，它的测试运行是会保留上一个输入数据的类中变量的。
+
+```python
+class CustomStack:
+    stack = []
+    MAX = 0
+    
+    def __init__(self, maxSize: int):
+        self.MAX = maxSize
+        self.stack = []
+
+    def push(self, x: int) -> None:
+        if len(self.stack)<self.MAX:
+            self.stack.append(x)
+
+    def pop(self) -> int:
+        if self.stack == []:
+            return -1
+        else:
+            ans = self.stack[len(self.stack)-1]
+            del self.stack[len(self.stack)-1]
+            return ans
+
+    def increment(self, k: int, val: int) -> None:
+        if len(self.stack)<k:
+            for i in range(len(self.stack)):
+                self.stack[i] += val
+        else:
+            for i in range(k):
+                self.stack[i]+=val
+
+
+# Your CustomStack object will be instantiated and called as such:
+# obj = CustomStack(maxSize)
+# obj.push(x)
+# param_2 = obj.pop()
+# obj.increment(k,val)
+```
+
+**T1382 将二叉搜索树变平衡 //python3**
+
+【思路】一开始看到这道题我是很慌的，因为AVL树的那些操作我基本都忘光了。但是静下来思考，发现并不需要复杂的数据结构知识。因为题目给的就已经是二叉搜索树了，所以中序遍历即可得到一个包含树上所有元素的有序数组。然后把这个有序数组递归生成平衡树即可。
+
+【补充】在具体实现的时候，参考数据范围，我没有做中序遍历（紧张想不起来怎么写了），直接把所有元素放出来做了一遍排序，这样时间效率肯定大打折扣，但是不会超时。
+
+**T1383 最大的团队表现值 //python3**
+
+【思路】拿到这道题我想了很多，最先排除的是贪心（，，，），想了很长时间的动态规划，但是发现本题似乎并不具备最优子结构。最终想到，如果枚举最小的效率，然后只需要从效率更高的人中找k-1（如果不足k-1个，有多少来多少）个速度最快的就行了。所以建立一个包含index、速度和效率的列表，以速度为关键字排序，再以效率为关键字排序（sort默认的是，放在首位的是排序主关键字）。但是这样会存在很大的问题：为了保证当前枚举的人是计算中效率最低的（必须包括且必须是效率最低），需要依次删除枚举的人，并对剩下的人进行重新排序。这个就非常麻烦了，时间效率直指N^2，结果可想而知，超时（不过过了51个点，最后两个点超时）
+
+```python
+class Solution:
+    def maxPerformance(self, n: int, speed: List[int], efficiency: List[int], k: int) -> int:
+        Mod = 10**9+7
+        sl, el = [], []
+        for i in range(n):
+            el.append([efficiency[i],speed[i],i])
+            sl.append([speed[i],efficiency[i],i])
+        el.sort()
+        sl.sort()
+        MAX = 0
+        for i in range(n):
+            n = len(sl)
+            ee, ss, ii = el[i][0], el[i][1], el[i][2]
+            if n>k:
+                sss = sl[n-k:n]
+            else:
+                sss = sl
+            summ = 0
+            if [ss,ee,ii] in sss:
+                for j in range(len(sss)):
+                    summ+=sss[j][0]
+            else:
+                sss = sss[1:len(sss)]
+                summ += ss
+                for j in range(len(sss)):
+                    summ += sss[j][0]
+            if summ*ee>MAX:
+                MAX = summ*ee
+            sl.remove([ss,ee,ii])
+        return MAX% Mod
+```
+
+【借鉴】可以维护一个优先队列，来取出前k个。注意，我借鉴的思路是倒着推的，为什么倒着推？因为，按照我的思路，最小的效率必须被包含（正着推的话）。但是如何倒着推，最小的效率不需要一定包含：因为只有在最小效率的speed大到前k位的时候它才被包含，如果没有大到前k位，之前肯定计算出过更大的结果。下面把别人的代码贴上，写得非常漂亮。
+
+```python
+from queue import PriorityQueue
+class Solution:
+    def maxPerformance(self, n: int, speed: List[int], efficiency: List[int], k: int) -> int:
+        items = [(speed[i], efficiency[i]) for i in range(n)]
+        items.sort(key=lambda item:item[1], reverse=True)
+        add_sum = 0
+        pq = PriorityQueue()
+        res = 0
+        for i in range(n):
+            pq.put(items[i][0])
+            add_sum += items[i][0]
+            if pq.qsize() > k:
+                add_sum -= pq.get()
+            val = add_sum * items[i][1]
+            if val > res:
+                res = val
+        return res % (10 ** 9 + 7)
+```
+
+
+
+
+
+## Postscript
 
  LeetCode可能确实是网络上最简单的成年人oj，难度确实和ICPC什么的没法比，但是我始终觉得：把简单的东西做好就是不简单。在实际工作当中，可能连LeetCode-hard级别的问题也是很少遇到的，因而从功利的角度来说，LeetCode也许是工科狗的最好选择——毕竟大部分人这辈子都用不到AC自动机或者树状DP，甚至连FFT也不可能自己动手写一遍。
 
