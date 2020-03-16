@@ -2,7 +2,7 @@
 
 ## Daily-Practice
 
-**T1****两数之和（****Two Sum****）****//C++**
+**T1两数之和（Two Sum）//C++**
 
 简单来说题目就是输入序列和目标值，输出序列中满足和为目标值的两个数的位置。
 
@@ -16,13 +16,13 @@
 
 
 
-**T2****两数相加（****Add Two Numbers****）****//python3**
+**T2两数相加（Add Two Numbers）//python3**
 
  对照他给定的ListNode的定义方式去写就好了，python这个if的写法真的是很英语了，多个变量同时赋值也非常的语言化，总的来说确实好用。
 
  
 
-**T3****无重复最长子序列****(Longest Substring Without Repeating Characters) //C++**
+**T3无重复最长子序列(Longest Substring Without Repeating Characters) //C++**
 
 这道题刷得比较艰难，在线调试没有一遍过，还是在线下编译调试了半天才发现三处问题。第一是需要注意length()函数返回的值和角标的关系：最后一个元素的角标是长度减1。平时不会在这上面犯错，但是出现循环条件判断的时候容易出错。第二处是本例有两种情况，元素直接入队、出队重复元素后入队，两种情况都要对入队元素的哈希进行修正，我一开始漏掉了后一种。第三处是直接复制粘贴导致的（发现第二个问题之后），把条件判断粘过来做赋值，直接导致赋值无效。
 
@@ -30,7 +30,7 @@
 
  
 
-**T4****两有序数组的中位数****(Median of Two Sorted Arrays) //C++**
+**T4两有序数组的中位数(Median of Two Sorted Arrays) //C++**
 
 思路来得很快，我的思路来自归并排序。这里需要先强调一下vector的用法，真的非常好用。
 
@@ -49,7 +49,7 @@ vector<int> b(a.begin(), a.begin()+3) ;        //将a向量中从第0个到第2�
 
 
 
-**T5****最长回文子串****(Longest Palindromic Substring) //python3**
+**T5最长回文子串(Longest Palindromic Substring) //python3**
 
 【思路】分类讨论，串长可能是奇数/偶数，因为问题具有最优子结构（回文串去掉两头也是回文串）和无后效性，可以用DP的思路来解决，复杂度O(n^2)。需要注意的是本题还有一个分类讨论，就是串为空或者只有一个字母，一般来讲也能普适性的解决，但是实际操作的时候有可能会不对（比如串为单个字符的时候返回了空串）。
 
@@ -57,13 +57,13 @@ vector<int> b(a.begin(), a.begin()+3) ;        //将a向量中从第0个到第2�
 
 
 
-**T6****之字转换****(ZigZag Conversion) //python3**
+**T6之字转换(ZigZag Conversion) //python3**
 
 【借鉴】本题一方面学python里面list和字符串的定义与处理，与C甚至MATLAB等语言有很大不同。另一方面展示了一个问题可以怎样从另一个角度来思考，示例本身的格式可能会极大地影响对问题的解读，所以能否跳出示例所限制的条条框框就很关键——就像这道题，在草稿纸上画一个斜的“之”字，就很清晰了。
 
 
 
-**T7****整数倒置****(Reverse of Integer) //C++**
+**T7整数倒置(Reverse of Integer) //C++**
 
 主要要注意考虑全面，用long long来储存可能越界的数值并判断越界与否，需要注意的就是-maxlongint取绝对值之后是溢出的，操作数就应该直接用64位整型。
 
@@ -77,13 +77,13 @@ vector<int> b(a.begin(), a.begin()+3) ;        //将a向量中从第0个到第2�
 
  
 
-**T9****回文数****(Palindrome Number) //C++**
+**T9回文数(Palindrome Number) //C++**
 
 直接用T7的程序就行了，小于零直接返回0。另外可以加一句判断，如果这个数是10的整数倍，那就可以直接返回0；也可以尝试加更多剪枝语句，会略微快一点点。
 
 
 
-**T10****正则表达式匹配****(Regular Expressing Matching) //python3
+**T10正则表达式匹配(Regular Expressing Matching) //python3**
 
 【借鉴】
 
@@ -118,7 +118,7 @@ vector<int> b(a.begin(), a.begin()+3) ;        //将a向量中从第0个到第2�
 
 
 
-**T11****最能装水的容器****(Container With Most Water) //C++**
+**T11最能装水的容器(Container With Most Water) //C++**
 
 本题的关键在容器的高度由短板决定，从两边向中间枚举是容易想到的，在向中间枚举的过程中比两边更低的板子是可以直接忽略的（这也是容易想到的）。
 
@@ -128,7 +128,7 @@ vector<int> b(a.begin(), a.begin()+3) ;        //将a向量中从第0个到第2�
 
  
 
-**T12****阿拉伯数字转罗马数字****(Integer to Roman) //C++**
+**T12阿拉伯数字转罗马数字(Integer to Roman) //C++**
 
 本题的关键麻烦在于4、9、40等这些特殊数字，如果讨论来解决非常麻烦。
 
@@ -136,13 +136,13 @@ vector<int> b(a.begin(), a.begin()+3) ;        //将a向量中从第0个到第2�
 
  
 
-**T13****罗马数字转阿拉伯数字****(Roman to Integer) //C++**
+**T13罗马数字转阿拉伯数字(Roman to Integer) //C++**
 
 同样是打表，这次思路就很清楚，先对比两个连在一起的，再对比单字符的就可以了。
 
 
 
-**T14****最长公共前缀****(Longgest Common Prefix) //python3**
+**T14最长公共前缀(Longgest Common Prefix) //python3**
 
 找到最短的那个，从头开始逐字符判断即可
 
@@ -150,20 +150,20 @@ vector<int> b(a.begin(), a.begin()+3) ;        //将a向量中从第0个到第2�
 
 
 
-**T15****三数之和****(3 Sum) //python3**
+**T15三数之和(3 Sum) //python3**
 
 【思路】由于样例中给出的三元组都是有序的，所以显然应该先对输入序列排序。本题至少应该优化到N^2，所以排序的复杂度可以不计。设置三个指针变量，i、j、k，代表三个数在数组中位置，如果i从开始向末端移动，那么j从i+1的位置向末端移动，由于nums是有序的，对同一个i而言，k只需要从nums的末端扫描到j+1的位置即可。
 优化的关键在于，如果nums[i]和num[i-1]一样的话，直接continue就好了，因为如果nums[i]==nums[i-1]，由num[i]计算出的结果必然是num[i-1]的子集。
 
 
 
-**T16****三数之和最近****(3 Sum Closest) //python3**
+**T16三数之和最近(3 Sum Closest) //python3**
 
 【思路】和上面一模一样，计算误差，对每个i，k只向一个方向移动，移动到对当前j来说误差最小的位置。如果对j来说这个k是最好的，那么对j+1来说，更好的k不可能向右移动！因为向右只会让误差更大。
 
 
 
-**T17****电话号码字母组合****(Letter Combinations of a Phone number) //python3**
+**T17电话号码字母组合(Letter Combinations of a Phone number) //python3**
 
 【思路】检讨，我第一反应居然是递归。这根本没有必要递归的，递归是自己浪费系统堆栈。自己拿一个list把结果存起来，从1个字母推到n个字母就好了，每一步把上一步的结果从list里面删掉
 
@@ -171,7 +171,7 @@ vector<int> b(a.begin(), a.begin()+3) ;        //将a向量中从第0个到第2�
 
 
 
-**T18****四数之和****(4 Sum) //python3**
+**T18四数之和(4 Sum) //python3**
 
 【思路】照搬3数和的思路，马马虎虎凑了个N三方的程序怼过去了，还不错，如果按有序性break的话，如果target正常其实勉强算常数比较大的N平方？
 
@@ -179,7 +179,7 @@ vector<int> b(a.begin(), a.begin()+3) ;        //将a向量中从第0个到第2�
 
 
 
-**T19****去除链表倒数N位数****(Remove Nth Node from End of List) //python3**
+**T19去除链表倒数N位数(Remove Nth Node from End of List) //python3**
 
 【思路】英语翻译题
 
@@ -187,7 +187,7 @@ vector<int> b(a.begin(), a.begin()+3) ;        //将a向量中从第0个到第2�
 
 
 
-**T20****有效括号****(Valid Parentheses) //python3**
+**T20有效括号(Valid Parentheses) //python3**
 
 【思路】第一眼栈
 
@@ -195,7 +195,7 @@ vector<int> b(a.begin(), a.begin()+3) ;        //将a向量中从第0个到第2�
 
 
 
-**T21****合并有序链表****(Merge Two Sorted Lists) //python3**
+**T21合并有序链表(Merge Two Sorted Lists) //python3**
 
 【思路】英语翻译
 
@@ -203,7 +203,7 @@ vector<int> b(a.begin(), a.begin()+3) ;        //将a向量中从第0个到第2�
 
 
 
-**T22****生产括号****(Generate Parenthese) //python3**
+**T22生产括号(Generate Parenthese) //python3**
 
 【思路】栈混洗，Catalan数，递归生成即可
 
@@ -259,7 +259,7 @@ class Solution:
 
 
 
-**T27****去除元素****(Remove Element) //python3**
+**T27去除元素(Remove Element) //python3**
 
 【思路】英语翻译
 
@@ -267,31 +267,31 @@ class Solution:
 
 
 
-**T28****实现 strStr()****(Inplement strStr()) //python3**
+**T28实现 strStr()(Inplement strStr()) //python3**
 
 【思路】英语翻译，人生苦短我用python，python的字符串集成了.find函数，重载了查找字符串的功能！
 
 
 
-**T29****两数相除****(Divide Two Intergers) //python3**
+**T29两数相除(Divide Two Intergers) //python3**
 
 本题相当无趣，主要是负数情况的讨论，非常boring
 
 
 
-**T35****寻找插入位置****(Search Insert Position) //python3**
+**T35寻找插入位置(Search Insert Position) //python3**
 
 【思路】分治法，cornor condition是输入空列表，one pass
 
 
 
-**T38****数数****(Count and Say) //python3**
+**T38数数(Count and Say) //python3**
 
 【思路】递推，能不用递归尽量不用，想了半天发现实在是没有使用递归的必要性，无论是思维量还是运算量上感觉都省不到哪儿去。
 
 
 
-**T39****组合之和****(Combination Sum) //python3**
+**T39组合之和(Combination Sum) //python3**
 
 【思路】本题子结构十分明显，最自然也最合理的思路只能是递归。
 
@@ -304,7 +304,7 @@ class Solution:
 
 
 
-**T40****组合之和2****(Combination Sum 2) //python3**
+**T40组合之和2(Combination Sum 2) //python3**
 
 【思路】我懒，想把上一题的代码直接搬过来。思考了一下发现肯定不行，因为如果有重复元素的话，肯定会出现重复组合。所以最开始的想法是，照搬上题代码，加一个hash。但是对列表进行hash显得有点蠢（set本身是基于dict的，也不支持对list这种“可变”结构进行hash），对tuple哈希倒是可以，总觉得背离了题目的本意，如果数据给一百万个同样的数字，会浪费大量的时间去判重。
 
@@ -316,7 +316,7 @@ class Solution:
 
 
 
-**T41****首个消失的正整数****(First Missing Positive) //python3**
+**T41首个消失的正整数(First Missing Positive) //python3**
 
 【思路】想了一下，这题感觉没办法取巧，只能从1开始尝试，关键是判断是否存在的时候hash一下。python的set查询是用了dict的，也就将它本来就做了很好的hash（red-black tree)。那么直接翻译就行了
 
@@ -324,7 +324,7 @@ class Solution:
 
 
 
-**T46****排列****(Permutations) //python3**
+**T46排列(Permutations) //python3**
 
 【思路】当然是递归，全排列应该只能用递归做，毕竟自带n阶乘的复杂度。让我觉得困难的地方在于定义什么参数？用什么方法来储存答案？
 
@@ -334,19 +334,19 @@ class Solution:
 
 
 
-**T47****排列二****(Permutations 2) //python3**
+**T47排列二(Permutations 2) //python3**
 
 【思路】本着不重复造轮子的原则把上道题的代码粘贴过来，循环的时候注意重复的元素不进行递归调用，定义一个集合来判别重复即可。
 
 
 
-**T48****旋转图像****(Rotate Image) //python3**
+**T48旋转图像(Rotate Image) //python3**
 
 【思路】四个数的置换，本题强调原地操作，还是很有意思的。
 
 
 
-**T49****相同字母异序词****(Group Anagrams) //python3**
+**T49相同字母异序词(Group Anagrams) //python3**
 
 【思路】Hash，这题我尝试了自己的想法，卡时间过：将字母的ASCII值加上一个大质数，然后相乘，作为哈希值。如果不加这个大质数，最后一个点会过不掉，因为26个字母的ASCII值并不互质，总是会出一些问题。
 
@@ -379,11 +379,27 @@ class Solution(object):
 
 
 
-**T50****快速幂****(Pow(x,n)) //python3**
+**T50快速幂(Pow(x,n)) //python3**
 
 【思路】英语翻译
 
 【启示】人生苦短，我用python（真就拒绝重复造轮子呗）
+
+
+
+**T53 最大子序和 //python3**
+
+【思路】
+
+解法1：类似于动规，递推过去就好，有明显的子结构，O(n)
+
+解法2：分治，O(log(n))，不断二分，合并的时候要判断两个分段的最大子序是不是连在一起的。如果不是，还要分类讨论（讲道理挺麻烦的，懒得写了）
+
+
+
+**T58 最后一个单词的长度 //python3**
+
+【思路】英语翻译
 
 
 
