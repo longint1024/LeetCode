@@ -1,5 +1,9 @@
 # LeetCode
 
+[TOC]
+
+
+
 ## Daily-Practice
 
 **T1两数之和（Two Sum）//C++**
@@ -482,6 +486,12 @@ class Solution(object):
 
 
 
+**T198 打家劫舍 //python3**
+
+【思路】由于每日一题的存在，我先做的面试题17.16按摩师（这名字怎么这么sq），跟本题一模一样。
+
+
+
 **T300 最长上升子序列 //python3**
 
 【思路】DP经典思路，以dp[i]记录以第i位结尾（必须包含第i位）的最长子序列长度，那么显然，需要枚举N^2次，找到其之前小于第i位数字结尾的所有dp中最大的那个，加1就是dp[i]
@@ -534,6 +544,12 @@ def gcd(a:int,b:int)->int:
 **T461** **汉明距离** **//python3**
 
 ^按位异或，&按位与，>>右移，<<左移
+
+
+
+**T509 斐波那契数**
+
+模拟，当然了本题最快的方法是打表。
 
 
 
@@ -641,6 +657,98 @@ Python的字符串操作和MATLAB非常类似，len()可以直接得到字符串
 
 
 
+**面试题10-1 斐波那契数列**
+
+【思路】通过本题我也有心对比一下直接求和与快速幂的效率区别，毕竟取模是一个挺麻烦的操作。结论是100以内这个数据量用快速幂反而慢出天际，，，
+
+【备注】第70题、第530题和本题一样
+
+```python
+class Solution:
+    def fib(self, n: int) -> int:
+        def multi(x:List[List[int]], y:List[List[int]]) -> List[List[int]]:
+            m = len(x)
+            n = len(x[0])
+            s = len(y[0])
+            tmp = [[0 for i in range(s)]for j in range(m)]
+            for i in range(m):
+                for j in range(n):
+                    for k in range(s):
+                        tmp[i][k] += x[i][j]*y[j][k] % 1000000007
+            return tmp
+        fib = [[0,1],[1,1]]
+        a = [[0],[1]]
+        while n>0:
+            if n & 1 == 1:
+                a = multi(fib,a)
+            n = n//2
+            fib = multi(fib,fib)
+        return a[0][0] % 1000000007
+```
+
+
+
+**面试题17.16 按摩师**
+
+这是每日一题打卡的时候出现的题目，个人感觉每日一题打卡活动推的题目都是很经典的，像这道题，虽然难度上确实是简单，但是确确实实要懂一些小技巧。
+
+【思路】设定一个数组，记录到当前客户（必须包含当前客户）为止，所能收获的最大总预约时长。由于必须包含该客户，所以一定不能包含上一个客户。故而time[i] = max(time[0:i-2])，顺着递推，在递推的过程中，可以顺便把MAX的计算也做了，所以转移方程为：time[i] = max(MAX,time[i-2])+input[i]，时间复杂度O(n)，递推完成之后顺着扫描一遍找出time数组中最大的那个数就行了。空间复杂度O(n)，果然如我所想，82%/100%，很快。
+
+```python
+class Solution:
+    def massage(self, nums: List[int]) -> int:
+        ans = nums
+        MAX = -2147483647
+        for i in range(2,len(nums)):
+            if ans[i-2]>MAX:
+                MAX = ans[i-2]
+            ans[i] += MAX
+        MAX = 0
+        for i in range(len(nums)):
+            if ans[i]>MAX:
+                MAX = ans[i]
+        return MAX
+```
+
+【补充】写完思路之后我突然意识到（太蠢了），只需要记录三个数就行了，这题空间复杂度可以到O(1)的。改进的写法更新在T198打家劫舍里了，这两题一模一样。
+
+```python
+class Solution:
+    def rob(self, nums: List[int]) -> int:
+        if nums == []:
+            return 0
+        if len(nums) == 1:
+            return nums[0]
+        MAX = max(nums[0], nums[1])
+        first, second = nums[0], MAX
+        for i in range(2,len(nums)):
+            if first + nums[i] > MAX:
+                MAX = first + nums[i]
+            first = second
+            second = MAX
+        return MAX
+```
+
+【借鉴】整个写完之后我看了下别人的想法，发现确实没有必要设置“一定包含”，这样的话dp[i]=max(dp[i-2]+nums[i],dp[i-1])就完事了。
+
+```python
+class Solution:
+    def rob(self, nums: List[int]) -> int:
+        if nums == []:
+            return 0
+        if len(nums) == 1:
+            return nums[0]
+        MAX = max(nums[0], nums[1])
+        first, second = nums[0], MAX
+        for i in range(2,len(nums)):
+            MAX = max(first+nums[i], second)
+            first = second
+            second = MAX
+        return MAX
+```
+
+
+
 **面试题 40 最小的k个数**
 
 【思路1】排序，然后输出，复杂度O(nlogn)，由于样例的特殊性（或者是python自带的sort过于优秀），这个居然会很快？68%/100%
@@ -665,7 +773,7 @@ score: 7, time: 59:33, rank: 3051 / 6242
 
 **T1374. Generate a String With Characters That Have Odd Counts //python3**
 
-生成一个字符串，英语翻译
+生成一个字符串，模拟题
 
 **T1375. Bulb Switcher III //python3**
 
@@ -736,7 +844,7 @@ class CustomStack:
 
 【思路】一开始看到这道题我是很慌的，因为AVL树的那些操作我基本都忘光了。但是静下来思考，发现并不需要复杂的数据结构知识。因为题目给的就已经是二叉搜索树了，所以中序遍历即可得到一个包含树上所有元素的有序数组。然后把这个有序数组递归生成平衡树即可。
 
-【补充】在具体实现的时候，参考数据范围，我没有做中序遍历（紧张想不起来怎么写了），直接把所有元素放出来做了一遍排序，这样时间效率肯定大打折扣，但是不会超时。
+【补充】在具体实现的时候，参考数据范围，我没有做中序遍历（图省事儿），直接把所有元素放出来做了一遍排序，这样时间效率肯定大打折扣，但是不会超时。
 
 **T1383 最大的团队表现值 //python3**
 
@@ -823,7 +931,7 @@ score: 18, time: 1:08:23+5min=1:13:23, rank: 128 / 4148 || 495 / 10930
 
 【借鉴】
 
-本题不是我自己做出来的。拿到这道题我首先想到了KMP算法，而正好网上有KMP算法解决最长公共前后缀的代码，我把C++改成了python再小做修改就过了（据说python暴力也能过？）。
+本题不是我自己做出来的。拿到这道题我首先想到了KMP算法，本身KMP算法简化一下就是前后缀匹配，而正好网上有KMP算法的代码，我把C++改成了python再小做修改就过了（据说python暴力也能过？）。
 
 
 
