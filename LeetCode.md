@@ -324,6 +324,22 @@ class Solution:
 
 
 
+**T33 搜索旋转排序数组 //python3**
+
+【思路】因为之前做过了旋转排序数组旋转点（对升序序列而言是最小值）查找的程序，所以本题思路非常明了，先找出旋转点，然后分段进行二分查找
+
+【补记】附上的代码写复杂了，因为仅从大小就可以判断target在哪一段中。
+
+
+
+**T34 在排序数组中查找元素的第一个和最后一个位置 //python3**
+
+【思路】二分查找变形，关键在二分的时候大于小于号带不带等号，对于一般查找，等于即可返回。对这种问题，找左边开头数字的话，如果target<=nums[mid]返回左边，否则返回右边。找右边开头数字的话，如果target>=nums[mid]返回右边，否则返回左边。
+
+【注意】现在写此类代码已经形成习惯，如果r-l小于一定值直接使用枚举法查找，理论上来说可以提升性能，也能避免递归边界是l==r还是l==r-1的问题。
+
+
+
 **T35寻找插入位置(Search Insert Position) //python3**
 
 【思路】分治法，cornor condition是输入空列表
@@ -610,6 +626,23 @@ Python自带list里面就有reverse函数，可以逆序。这道题有个有意
 **T892 三维形体的表面积 //python3**
 
 模拟，先算上下两面，再挨个统计四周，四周只用统计比周围立方体高出的部分就好，剩下的都是被挡住的。
+
+
+
+**T914 卡牌分组 //python3**
+
+【思路】本题并不难想到要统计每种卡牌的数量然后计算最大公约数。
+
+【借鉴】但是官方提供的代码就很优秀（略作改动，gcd这种还是可以自己写的），本题主要学习reduce()函数的用法，另外collection的这个Counter也很好用，真香啊：
+
+```python
+class Solution:
+    def hasGroupsSizeX(self, deck: List[int]) -> bool:
+        def gcd(a:int, b:int)->int:
+            return a if b==0 else gcd(b,a%b)
+        vals = collections.Counter(deck).values()
+        return reduce(gcd, vals) >= 2        
+```
 
 
 
