@@ -2,6 +2,67 @@
 
 [TOC]
 
+## 专栏分析
+
+### 回溯
+
+经典题型莫过于解数独和N皇后了。
+
+下面这一段是解数独的核心代码
+
+```python
+def judge(x:int,y:int,n:int)->bool:
+    for i in range(9):
+        if map[i][y] == n:
+            return False
+        if map[x][i] == n:
+            return False
+        xx, yy = 3*(x//3)+i//3, 3*(y//3)+i%3
+        if map[xx][yy] == n:
+            return False
+    return True
+def dfs(x:int,y:int)->True:
+    exist = 0
+    for k in range(9):
+        if judge(x,y,k+1):
+            map[x][y] = k+1
+            flag = 0
+            exist = 1
+            for i in range(9):
+                if flag:
+                    break
+                for j in range(9):
+                    if not map[i][j]:
+                        flag = 1
+                        xn, yn = i,j
+                        break
+            if not flag:
+                return True
+            if dfs(xn,yn):
+                return True
+            map[x][y] = 0
+    if not exist:
+        return False
+```
+
+关键点有几处：一是judge函数判断方案是否可行，不需要判断整个棋盘，只需要判断新增的这一处影响到的区域就行。二是回溯的擦除，在dfs中调用dfs()后要逆序依次将之前填上的map位置擦掉，这相当于一个弹栈的过程。三是双层循环break要注意设flag变量，因为break只能退出一层；尽管这在本题中无关紧要，但是在别的地方可能非常致命。
+
+### 动态规划
+
+#### 背包
+
+面试题
+
+#### 区间动规
+
+#### 树状动规
+
+### 其他小技巧
+
+#### 双指针
+
+#### 快速幂
+
 
 
 ## Daily-Practice
@@ -932,6 +993,14 @@ Python的字符串操作和MATLAB非常类似，len()可以直接得到字符串
 【思路】字符串操作
 
 【注意】不要使用split()，多个空格只会识别一个（它只管分割，不会管有几个空格的）
+
+
+
+**面试题08.11 硬币**
+
+【借鉴】完全背包
+
+【注意】这题主要的坑点在于它是一个组合问题，其实按照上台阶的思路去做是没问题的，但是上台阶是一个排列问题（先1后2和先2后1是两种方案）。
 
 
 
