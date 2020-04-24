@@ -2,67 +2,6 @@
 
 [TOC]
 
-## 专栏分析
-
-### 回溯
-
-经典题型莫过于解数独和N皇后了。
-
-下面这一段是解数独的核心代码
-
-```python
-def judge(x:int,y:int,n:int)->bool:
-    for i in range(9):
-        if map[i][y] == n:
-            return False
-        if map[x][i] == n:
-            return False
-        xx, yy = 3*(x//3)+i//3, 3*(y//3)+i%3
-        if map[xx][yy] == n:
-            return False
-    return True
-def dfs(x:int,y:int)->True:
-    exist = 0
-    for k in range(9):
-        if judge(x,y,k+1):
-            map[x][y] = k+1
-            flag = 0
-            exist = 1
-            for i in range(9):
-                if flag:
-                    break
-                for j in range(9):
-                    if not map[i][j]:
-                        flag = 1
-                        xn, yn = i,j
-                        break
-            if not flag:
-                return True
-            if dfs(xn,yn):
-                return True
-            map[x][y] = 0
-    if not exist:
-        return False
-```
-
-关键点有几处：一是judge函数判断方案是否可行，不需要判断整个棋盘，只需要判断新增的这一处影响到的区域就行。二是回溯的擦除，在dfs中调用dfs()后要逆序依次将之前填上的map位置擦掉，这相当于一个弹栈的过程。三是双层循环break要注意设flag变量，因为break只能退出一层；尽管这在本题中无关紧要，但是在别的地方可能非常致命。
-
-### 动态规划
-
-#### 背包
-
-面试题
-
-#### 区间动规
-
-#### 树状动规
-
-### 其他小技巧
-
-#### 双指针
-
-#### 快速幂
-
 
 
 ## Daily-Practice
@@ -1126,7 +1065,7 @@ class Solution:
 
 
 
-**面试题 40 最小的k个数**
+**面试题40 最小的k个数**
 
 【思路1】排序，然后输出，复杂度O(nlogn)，由于样例的特殊性（或者是python自带的sort过于优秀），这个居然会很快？68%/100%
 
@@ -1137,6 +1076,12 @@ class Solution:
 【思路4】快速选择算法（emmmm我懒，暂时没有写这个代码）
 
 【思路5】BFPRT算法，至于为什么叫BFPRT算法，大概（一定）是因为它是由Blum、Floyd、Pratt、Rivest、Tarjan提出的吧。它只能躺在我的收藏夹吃灰了，看了一眼思路，我是不会写的。
+
+
+
+**面试题51 数组中的逆序对**
+
+【借鉴】经典算法，用归并排序求解逆序对问题，O(N^2)优化到O(NlogN)
 
 
 
