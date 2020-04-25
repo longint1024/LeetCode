@@ -119,6 +119,39 @@ def dfs(x:int,y:int)->True:
 
 【数独】关键点有几处：一是judge函数判断方案是否可行，不需要判断整个棋盘，只需要判断新增的这一处影响到的区域就行。二是回溯的擦除，在dfs中调用dfs()后要逆序依次将之前填上的map位置擦掉，这相当于一个弹栈的过程。三是双层循环break要注意设flag变量，因为break只能退出一层；尽管这在本题中无关紧要，但是在别的地方可能非常致命。
 
+下面是N皇后的代码
+
+```python
+def judge(x:int,y:int)->bool:
+    for i in range(n):
+        if map[i][y]:
+            return False
+    for xx in range(max(0,x+y-n+1),min(x+y+1,n)):
+        yy = x+y-xx
+        if map[xx][yy]:
+            return False
+    for xx in range(max(0,x-y),min(x-y+n,n)):
+        yy = xx-x+y
+        if map[xx][yy]:
+            return False
+    return True
+def dfs(r:int)->None:
+    for c in range(n):
+        if judge(r,c):
+            map[r][c] = 1
+            if r==n-1:
+                ans.append(trans(map))
+                map[r][c] = 0
+                return
+            dfs(r+1)
+            map[r][c] = 0
+dfs(0)
+```
+
+【N皇后】这个跟数独很像，经典的回溯题。需要注意的问题是：①判断对角线的时候注意取值范围；②对地图的擦除，因为N皇后是找到所有的解，所以最后一步的赋值擦除也是要做的（不然第N行总是会有个东西占着，不会影响同行，会影响对角线的判断和最终结果）。最后一步的擦除不在回溯之中，而是在你记录并返回之前，要把最后一步填上的皇后删掉。【注意】也可以写在回溯之中，在dfs(r+1)前添加条件，就是没有找完的情况下再找下一步，这样写应该更加正统一点③对全结果的记录，要特别注意数组的深拷贝和浅拷贝问题，以及数值和列表在函数内外传递的区别（传值？传址？）
+
+
+
 ### 广搜
 
 
