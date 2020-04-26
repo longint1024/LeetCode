@@ -72,6 +72,8 @@ class Solution:
         return head.next
 ```
 
+这里要注意的是，q.put放进去的应当是一个元组，不然拿出来的时候会有问题。并且我测试python2和python3的优先队列在这里有区别，Python2好像是支持放不可哈希的关键字的（不参与排序）。但是python3似乎并不行。
+
 
 
 ## 搜索
