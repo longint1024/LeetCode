@@ -234,3 +234,23 @@ class Solution:
         return a[0][0] % 1000000007
 ```
 
+### 位运算(+python reduce)
+
+```python
+from functools import reduce
+class Solution:
+    def singleNumbers(self, nums: List[int]) -> List[int]:
+        xor, dif, ans1, ans2 = reduce(lambda x,y:x^y,nums), 1 ,0, 0
+        while not dif & xor:
+            dif <<= 1
+        for i in nums:
+            if i & dif:
+                ans1 ^= i
+            else:
+                ans2 ^= i
+        return [ans1,ans2]
+```
+
+【求落单元素】经典位运算，首先，如果要找出双元素数组中唯一落单的那个，可以直接异或。如果有两个落单的，可以异或得到两个数的异或值，然后找到出现不同的位置，用与运算将原数组分为两类，一类中包含一个落单的，并且相同的数字一定在同一类中。对两类分别累计异或即可得到想要的两个值。
+
+【注意】学习reduce的用法
