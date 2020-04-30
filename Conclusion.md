@@ -152,6 +152,37 @@ dfs(0)
 
 【N皇后】这个跟数独很像，经典的回溯题。需要注意的问题是：①判断对角线的时候注意取值范围；②对地图的擦除，因为N皇后是找到所有的解，所以最后一步的赋值擦除也是要做的（不然第N行总是会有个东西占着，不会影响同行，会影响对角线的判断和最终结果）。最后一步的擦除不在回溯之中，而是在你记录并返回之前，要把最后一步填上的皇后删掉。【注意】也可以写在回溯之中，在dfs(r+1)前添加条件，就是没有找完的情况下再找下一步，这样写应该更加正统一点③对全结果的记录，要特别注意数组的深拷贝和浅拷贝问题，以及数值和列表在函数内外传递的区别（传值？传址？）
 
+```python
+class Solution:
+    ans = 0
+    def totalNQueens(self, n: int) -> int:
+        map = [[1]*n for i in range(n)]
+        self.ans = 0
+        def sweep(r:int,c:int,e:int)->None:
+            for i in range(n):
+                map[i][c] -= e
+            for i in range(max(0,r+c-n+1),min(r+c+1,n)):
+                map[i][r+c-i] -= e
+            for i in range(max(0,r-c),min(r-c+n,n)):
+                map[i][i+c-r] -= e
+        def dfs(r:int)->None:
+            for c in range(n):
+                if map[r][c]==1:
+                    if r == n-1:
+                        self.ans += 1
+                        return
+                    sweep(r,c,1)
+                    dfs(r+1)
+                    sweep(r,c,-1)
+            return
+        dfs(0)
+        return self.ans
+```
+
+【N皇后】这次我试了另一种途径：用map来标记占用区域，这样可以避免重复判断。注意python外部变量在函数内部不能被改变（除非传的是地址），所以我觉得要把变量绑定到地址上，一试self指针果然可以。这题需要注意的地方是，sweep清除横竖斜行的占用时，不能直接把所有占用都清掉了，因为可能把不输入它的别的占用也给清掉了。所以我用map记录的实际上是“被占用次数”，清除就加回去一次。直到所有限制都被解禁才可以使用。
+
+【思考】当然也可以这样：用map来记录可否使用，放置每个皇后时，考虑由这个皇后引入的“新增”的禁用区域，回溯时只释放“新增”的禁用区域即可。
+
 
 
 ### 广搜
@@ -234,7 +265,7 @@ class Solution:
         return a[0][0] % 1000000007
 ```
 
-### 位运算(+python reduce)
+### 位运算(+python3 reduce)
 
 ```python
 from functools import reduce
