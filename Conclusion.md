@@ -1,5 +1,32 @@
 # 专栏分析
 
+## 基本数据结构
+
+### 合并有序链表
+
+```python
+class Solution:
+    def mergeTwoLists(self, l1: ListNode, l2: ListNode) -> ListNode:
+        head = ListNode(0)
+        now = head
+        while 1:
+            if not l2:
+                now.next = l1
+                break
+            while l1 and l1.val<=l2.val:
+                now.next = ListNode(l1.val)
+                now, l1 = now.next, l1.next
+            if not l1:
+                now.next = l2
+                break
+            while l2 and l2.val<l1.val:
+                now.next = ListNode(l2.val)
+                now, l2 = now.next, l2.next
+        return head.next
+```
+
+【注意】这里细节有两个，首先if not l2是必须的，因为l2有可能本身就是空的，所以要写在最前面。l1不停地向后的过程中，有可能变成None而退出第一个内层循环，这时要注意判断并退出，所以后面跟的if not l1也是必须的。
+
 ## 排序及其变形问题
 
 ### 快速排序
