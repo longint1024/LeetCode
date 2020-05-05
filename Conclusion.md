@@ -2,7 +2,9 @@
 
 ## 基本数据结构
 
-### 合并有序链表
+### 链表
+
+下面是一个合并有序链表的程序，还是有需要注意的东西的
 
 ```python
 class Solution:
@@ -234,6 +236,31 @@ class Solution:
 
 ### 二叉树
 
+#### Binary Search Tree
+
+话不多说，上代码，中序遍历判断是否是BST
+
+```python
+class Solution:
+    def isValidBST(self, root: TreeNode) -> bool:
+        stack, inorder = [], float('-inf')
+        print(inorder)
+        while stack or root:
+            while root:
+                stack.append(root)
+                root = root.left
+            root = stack.pop()
+            # 如果中序遍历得到的节点的值小于等于前一个 inorder，说明不是二叉搜索树
+            if root.val <= inorder:
+                return False
+            inorder = root.val
+            root = root.right
+
+        return True
+```
+
+
+
 ### 字典树
 
 
@@ -311,4 +338,4 @@ class Solution:
 
 【求落单元素】经典位运算，首先，如果要找出双元素数组中唯一落单的那个，可以直接异或。如果有两个落单的，可以异或得到两个数的异或值，然后找到出现不同的位置，用与运算将原数组分为两类，一类中包含一个落单的，并且相同的数字一定在同一类中。对两类分别累计异或即可得到想要的两个值。
 
-【注意】学习reduce的用法
+【注意】学习reduce的用法，另外，python3中reduce放在functools里面，而不是像Python2那样作为内置函数
