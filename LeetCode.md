@@ -635,6 +635,12 @@ class Solution:
 
 
 
+**T136 只出现一次的数字 //python3**
+
+【思路】异或，这题的延伸版是面试题56-1
+
+
+
 **T151 翻转字符串里的单词 //python3**
 
 【思路】s.split()，s.reverse()，''.join(s)。军体拳三连。
