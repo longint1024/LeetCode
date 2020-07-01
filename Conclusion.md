@@ -222,6 +222,30 @@ class Solution:
 
 ## 动态规划
 
+### 递推
+
+我本来想把此类问题命名为“简单动态规划”，以分类在解决此类问题的过程中，经常出现一种简单的思路。比如上台阶这种递推，稍微复杂一点的比如：最长不下降子序列、最长重复子序列等等。
+
+比如很经典的一个问题，寻找两个数组的最长重复子数组。同样是以空间换时间，将前缀最大长度做好记录。为了将递推的数组表示为子问题的形式，应当假定当前位必须被包含。
+
+```python
+class Solution:
+    def findLength(self, A: List[int], B: List[int]) -> int:
+        m, n, MAX = len(A), len(B), 0
+        dp = [[0 for i in range(n+1)]for j in range(m+1)]
+        for i in range(1,m+1):
+            for j in range(1,n+1):
+                if A[i-1]==B[j-1]:
+                    dp[i][j] = dp[i-1][j-1]+1
+                else:
+                    dp[i][j] = 0
+                if dp[i][j]>MAX:
+                    MAX = dp[i][j]
+        return MAX
+```
+
+
+
 ### 背包
 
 面试题
