@@ -231,6 +231,7 @@ class Solution:
 比如很经典的一个问题，寻找两个数组的最长重复子数组。同样是以空间换时间，将前缀最大长度做好记录。为了将递推的数组表示为子问题的形式，应当假定当前位必须被包含。
 
 ```python
+#最长重复子串
 class Solution:
     def findLength(self, A: List[int], B: List[int]) -> int:
         m, n, MAX = len(A), len(B), 0
@@ -244,6 +245,27 @@ class Solution:
                 if dp[i][j]>MAX:
                     MAX = dp[i][j]
         return MAX
+```
+
+比如简单的迷宫走法总数问题，只能向右或向下：
+
+```python
+#滚动数组优化“右下”迷宫递推
+class Solution:
+    def uniquePathsWithObstacles(self, obstacleGrid: List[List[int]]) -> int:
+        m, n = len(obstacleGrid), len(obstacleGrid[0])
+        if obstacleGrid[0][0]:
+            return 0
+        ans = [0 for i in range(n)]
+        ans[0] = 1
+        for i in range(m):
+            for j in range(n):
+                if obstacleGrid[i][j]:
+                    ans[j] = 0
+                else:
+                    if j>0:
+                        ans[j] += ans[j-1]
+        return ans[n-1]
 ```
 
 
