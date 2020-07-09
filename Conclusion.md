@@ -40,6 +40,7 @@ class Solution:
 首先，需要熟练掌握归并排序的两种形式，一种是输入参数为数列的，另一种是直接对数组进行伪原地操作的，看一下第二种的写法：
 
 ```python
+#归并排序
 def merge(l:int,mid:int,r:int)->None:
     i,j,tmp = l,mid+1,[]
     while 1:
@@ -78,6 +79,7 @@ print(nums)
 下面给出的是第23题合并k个有序列表的优先队列解法：
 
 ```python
+#合并k个有序列表
 from queue import PriorityQueue
 
 class Solution:
@@ -101,9 +103,9 @@ class Solution:
         return head.next
 ```
 
-【注意】默认关键字是越小越好，最小的数字最先出队。
+【注意】默认关键字是**越小**越好，最小的数字最先出队。
 
-这里要注意的是，q.put放进去的应当是一个元组，不然拿出来的时候会有问题。并且我测试python2和python3的优先队列在这里有区别，Python2好像是支持放不可哈希的关键字的（不参与排序）。但是python3似乎并不行。
+这里要注意的是，q.put放进去的应当是一个元组，不然拿出来的时候会有问题。并且我测试python2和python3的优先队列在这里有区别，Python2好像是支持放不可哈希的关键字的（不参与排序）。但是python3似乎并不行。这可能和排序关键字的指定有关，我没有仔细研究。
 
 
 
@@ -116,6 +118,7 @@ class Solution:
 下面这一段是解数独的核心代码
 
 ```python
+#解数独
 def judge(x:int,y:int,n:int)->bool:
     for i in range(9):
         if map[i][y] == n:
@@ -155,6 +158,7 @@ def dfs(x:int,y:int)->True:
 下面是N皇后的代码
 
 ```python
+#N皇后
 def judge(x:int,y:int)->bool:
     for i in range(n):
         if map[i][y]:
@@ -184,6 +188,7 @@ dfs(0)
 【N皇后】这个跟数独很像，经典的回溯题。需要注意的问题是：①判断对角线的时候注意取值范围；②对地图的擦除，因为N皇后是找到所有的解，所以最后一步的赋值擦除也是要做的（不然第N行总是会有个东西占着，不会影响同行，会影响对角线的判断和最终结果）。最后一步的擦除不在回溯之中，而是在你记录并返回之前，要把最后一步填上的皇后删掉。【注意】也可以写在回溯之中，在dfs(r+1)前添加条件，就是没有找完的情况下再找下一步，这样写应该更加正统一点③对全结果的记录，要特别注意数组的深拷贝和浅拷贝问题，以及数值和列表在函数内外传递的区别（传值与传址），当然了python有它函数式编程的说法，本质上看起来个人感觉还是面向内存的问题。
 
 ```python
+#N皇后传递MAP
 class Solution:
     ans = 0
     def totalNQueens(self, n: int) -> int:
@@ -250,7 +255,7 @@ class Solution:
 比如简单的迷宫走法总数问题，只能向右或向下：
 
 ```python
-#滚动数组优化“右下”迷宫递推
+#障碍迷宫（+滚动数组->一维递推）
 class Solution:
     def uniquePathsWithObstacles(self, obstacleGrid: List[List[int]]) -> int:
         m, n = len(obstacleGrid), len(obstacleGrid[0])
@@ -289,6 +294,7 @@ class Solution:
 话不多说，上代码，中序遍历判断是否是BST
 
 ```python
+#中序遍历判定BST
 class Solution:
     def isValidBST(self, root: TreeNode) -> bool:
         stack, inorder = [], float('-inf')
@@ -309,7 +315,66 @@ class Solution:
 
 
 
-### 字典树
+### 字典树（Trie）
+
+LeetCode上有经典的**面试题17.13**，是字典树（Trie[Trai]读音参考特里亚，感觉很像“踹”）+动规的题目，当然可以用AC自动机。这道题的动规并不困难，棘手的地方是转移方程中有字符串与字典的匹配，这个一旦处理不好就会非常慢。
+
+我测试了一下，如果不将字典转为集合，而是直接用列表判断是否存在，那么耗时会非常可怕（9112ms，顺带吐槽：这也能过？合着不哈希也不卡时间的？），查询复杂度应该在O(m)。将字典转换为set()后查询，由于哈希的存在，复杂度较低，但常数很大（860ms）。下面给出用哈希的代码：
+
+```python
+#Hash-Table 单词最优匹配
+class Solution:
+    def respace(self, dictionary: List[str], sentence: str) -> int:
+        n = len(sentence)
+        dictionary = set(dictionary)
+        dp = [0]*(n+1)
+        for i in range(1, n+1):
+            dp[i] = dp[i-1]+1
+            for j in range(i):
+                if sentence[i-j-1:i] in dictionary:
+                    dp[i] = min(dp[i],dp[i-j-1])
+        return dp[n]
+```
+
+但只用哈希的话这题意思不大，加Trie优化后本题才到一个比较理想的性能：
+
+```python
+#Trie 单词最优匹配
+class Trie:
+    def __init__(self):
+        self.root = {}
+        self.word_end = -1
+    
+    def insert(self, word):
+        curNode = self.root
+
+        # 将单词逆序构建
+        for c in word[::-1]:
+            if c not in curNode:
+                curNode[c] = {}
+            curNode = curNode[c]
+        
+        curNode[self.word_end] = True
+
+
+class Solution:
+    def respace(self, dictionary: List[str], sentence: str) -> int:
+        n, t = len(sentence), Trie()
+        for word in dictionary:
+            t.insert(word)
+        dp = [0]*(n+1)
+        for i in range(1,n+1):
+            dp[i] = dp[i-1]+1
+            node = t.root
+            for j in range(i):
+                c = sentence[i-j-1]
+                if c not in node:
+                    break
+                elif t.word_end in node[c]:
+                    dp[i] = min(dp[i],dp[i-j-1])
+                node = node[c]
+        return dp[n]
+```
 
 
 
@@ -326,6 +391,7 @@ class Solution:
 经典的翻转链表：
 
 ```java
+//翻转链表
 public ListNode reverseList(ListNode head) {
 	ListNode pre = null;
 	ListNode cur = head;
@@ -345,6 +411,7 @@ public ListNode reverseList(ListNode head) {
 下面附上的是极为经典的矩阵快速幂求斐波那契数列的代码
 
 ```python
+#斐波那契数列（矩阵快速幂）
 class Solution:
     def fib(self, n: int) -> int:
         def multi(x:List[List[int]], y:List[List[int]]) -> List[List[int]]:
@@ -370,6 +437,7 @@ class Solution:
 ### 位运算(+python3 reduce)
 
 ```python
+#求数组中的两个不同元素（求一个不同元素的变化，位运算）
 from functools import reduce
 class Solution:
     def singleNumbers(self, nums: List[int]) -> List[int]:
