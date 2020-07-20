@@ -273,6 +273,91 @@ class Solution:
         return ans[n-1]
 ```
 
+又有此类问题的延伸：如果要求路径和的最小值最大（走过路径求和，优化沿途的最小值），此类问题就不能直接套用上面这种动规方式。因为如果正向递推，会不满足无后效性原则。
+
+#### 滚动数组
+
+滚动数组是一种很重要的优化手段，值得单独拿出来总结一下。
+
+比如T97：交错字符串。该题优化手段不像二维矩阵递推的滚动数组那样明显。
+
+```python
+#交错字符串，二维状态递推
+class Solution:
+    def isInterleave(self, s1: str, s2: str, s3: str) -> bool:
+        n1, n2, n3 = len(s1), len(s2), len(s3)
+        if n3 != n1+n2:
+            return False
+        dp = [[0 for i in range(n2+1)]for j in range(n1+1)]
+        dp[0][0] = 1
+        for i in range(n1+1):
+            for j in range(n2+1):
+                k = i+j
+                if i>0 and dp[i-1][j] and s1[i-1] == s3[k-1]:
+                    dp[i][j] = 1
+                    continue
+                if j>0 and dp[i][j-1] and s2[j-1] == s3[k-1]:
+                    dp[i][j] = 1
+        return bool(dp[n1][n2])
+```
+
+如果只使用一维递推，就不能直接在满足条件时赋值为真，因为dp[0]包含了多重含义，任何i对应的dp[i,0]都在dp[0]中。在二维数组中，每个dp[i,0]原本都占了个位置，本来就是零，所以可以在满足条件的情况下再改。但是一维数组不同，如果dp[i,0]不满足条件，它需要从0改成1。所以不能写成上面那样，不然就会出现伪判正。
+
+```python
+#交错字符串，一维状态递推
+class Solution:
+    def isInterleave(self, s1: str, s2: str, s3: str) -> bool:
+        if len(s1)<len(s2):
+            s1, s2 = s2, s1
+        n1, n2, n3 = len(s1), len(s2), len(s3)
+        if n3 != n1+n2:
+            return False
+        dp = [0 for i in range(n2+1)]
+        dp[0] = 1
+        for i in range(n1+1):
+            for j in range(n2+1):
+                k = i+j
+                if i>0:
+                    dp[j] = dp[j] and s1[i-1] == s3[k-1]
+                if j>0:
+                    dp[j] = dp[j] or (dp[j-1] and s2[j-1] == s3[k-1])
+        return bool(dp[n2])
+```
+
+这是在改成滚动数组时很容易犯的错误，究其原因，是二维本身“有恃无恐”，它只需要判断是否应该从0改1。而一维数组的情况复杂些，初始状态的赋值可能仅仅对第一次迭代有效，对后面的迭代则情况不同。因此，如果直接二维改一维，需要做以下判断：①能否直接改？会不会影响之后的状态？②考虑到初始条件，公式是否有细微变化？如果有，改动，如果不好改，干脆将初始状态进入迭代态的那一步单独提出来做了，再进入迭代滚动。
+
+
+
+### 记忆化搜索
+
+这类题目和第一类简单递推的思路其实差不多，问题在于它们常常看起来更像回溯。正向思路往往很难求解，构建逆向模型来描述问题看起来很有些像奇技淫巧。
+
+比如T312戳气球，这题定义开区间、建立子问题的手段都是值得学习的。定义dp[i,j]表示开区间i到j戳气球能得到的最高分数，如果思考先戳哪个、再戳哪个，很容易陷入回溯搜索的思路。问题在于，对于这道题，回溯为什么复杂度超高？因为它重复计算了很多次：在回溯dp[i,k]、dp[k,j]的过程中，对每一个枚举的k向下继续分解，dp[i,k]、dp[k,j]都会被其它的k重复计算很多次，从而形成一个阶乘的复杂度。如果我们定义这样的数组来储存此结果，就可以大大减少计算量。但记忆化搜索还有另一个问题：如何确保在用dp[k,j]之前，它已经被计算并保存了呢？如果考虑清楚这个顺序，实际上它已经变成动态规划递推了。
+
+有以上定义，显然当i>=j-1时，dp[i,j] = 0，这与初始化相同，不需要改变。由于k∈(i,j)，所以对dp[i,j]来说它需要的是这样一个倒三角形状的值。因此，i可以从n+1取到0倒着取，j从i+2正向取到n+1即可
+
+|  ??  |  ??  |  ??  | ans  |
+| :--: | :--: | :--: | :--: |
+|      |  ??  |  ??  |  ??  |
+|      |      |  ??  |  ??  |
+|      |      |      |  ??  |
+
+```python
+#T312 戳气球
+class Solution:
+    def maxCoins(self, nums: List[int]) -> int:
+        n = len(nums)
+        nums.insert(0,1)
+        nums.append(1)
+        dp = [[0 for i in range(n+2)]for j in range(n+2)]
+        for i in range(n+1,-1,-1):
+            for j in range(i+2,n+2):
+                for k in range(i+1,j):
+                    if dp[i][k]+dp[k][j]+nums[i]*nums[j]*nums[k]>dp[i][j]:
+                        dp[i][j] = dp[i][k]+dp[k][j]+nums[i]*nums[j]*nums[k]
+        return dp[0][n+1]
+```
+
 
 
 ### 背包
@@ -382,7 +467,37 @@ class Solution:
 
 
 
-## 其他小技巧
+
+
+## 数学
+
+### Catalan数
+
+T96不同的二叉搜索树
+
+```python
+#不同的二叉搜索树
+class Solution:
+    def numTrees(self, n: int) -> int:
+        ans = 1
+        for i in range(2,n+1):
+            ans = ans*(4*i-2)//(i+1)
+        return ans
+```
+
+
+
+## 轮子库
+
+### GCD
+
+```python
+#GCD
+def gcd(a:int,b:int)->int:
+	return gcd(b,a%b) if b else a
+```
+
+
 
 ### 双指针
 
