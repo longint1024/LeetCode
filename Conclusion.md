@@ -5,14 +5,19 @@
 ### 列表、元组与集合
 
 ```python
-list.remove(a)    #：删掉首个值为a的元素
+list.remove(a)    #：删掉首个值为a的元素，此操作在关于list的循环中谨慎使用
 
-del list[j]    #：删掉index为j的列表元素
+del list[j]    #：删掉index为j的列表元素，此操作在关于list的循环中谨慎使用
 
-list.insert(i,a)    #：在index为i的位置增添a元素
+list.insert(i,a)    #：在index为i的位置增添a元素，其后元素依次后移一位
 ```
 
+### 字符串
 
+```python
+str.upper()    #将字符串中所有字符转为大写
+str.lower()    #将字符串中所有字符转为小写
+```
 
 ### 链表
 
