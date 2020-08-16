@@ -46,6 +46,96 @@ class Solution:
 
 【注意】这里细节有两个，首先if not l2是必须的，因为l2有可能本身就是空的，所以要写在最前面。l1不停地向后的过程中，有可能变成None而退出第一个内层循环，这时要注意判断并退出，所以后面跟的if not l1也是必须的。
 
+### 栈
+
+### 队列
+
+#### 双向队列
+
+经典的是双向队列解决滑动窗口最大值问题。滑动窗口连续和最大可以用前缀和解决，滑动窗口内最大值可以在线性时间复杂度内实现，实现方式有双向队列和动态规划。
+
+```python
+#t239 滑动窗口最大值-双向队列实现
+from collections import deque
+class Solution:
+    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+        n = len(nums)
+        if not (n and k):
+            return []
+        if k==1:
+            return nums
+        dq, ans = deque(), []
+        def cleardq(i:int)->None:
+            if dq and dq[0]==i-k:
+                dq.popleft()
+            while dq and nums[i]>nums[dq[-1]]:
+                dq.pop()
+        MAX = -1000000
+        for i in range(k):
+            cleardq(i)
+            dq.append(i)
+            if nums[i]>MAX:
+                MAX = nums[i]
+        ans.append(MAX)
+        for i in range(k,len(nums)):
+            cleardq(i)
+            dq.append(i)
+            ans.append(nums[dq[0]])
+        return ans
+```
+
+### 指针、邻接表与拷贝（+哈希）
+
+这一题就非常好的展示了内存访问、邻接表使用与深浅拷贝之间的关系。需要注意的是哈希表的用法，本题关于哈希表的写法是非常规范且简洁的
+
+```python
+#T133 克隆图
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val = 0, neighbors = []):
+        self.val = val
+        self.neighbors = neighbors
+"""
+
+from collections import deque
+class Solution(object):
+
+    def cloneGraph(self, node):
+        """
+        :type node: Node
+        :rtype: Node
+        """
+
+        if not node:
+            return node
+
+        visited = {}
+
+        # 将题目给定的节点添加到队列
+        queue = deque([node])
+        # 克隆第一个节点并存储到哈希表中
+        visited[node] = Node(node.val, [])
+
+        # 广度优先搜索
+        while queue:
+            # 取出队列的头节点
+            n = queue.popleft()
+            # 遍历该节点的邻居
+            for neighbor in n.neighbors:
+                if neighbor not in visited:
+                    # 如果没有被访问过，就克隆并存储在哈希表中
+                    visited[neighbor] = Node(neighbor.val, [])
+                    # 将邻居节点加入队列中
+                    queue.append(neighbor)
+                # 更新当前节点的邻居列表
+                visited[n].neighbors.append(visited[neighbor])
+
+        return visited[node]
+```
+
+
+
 ## 排序及其变形问题
 
 ### 快速排序
@@ -240,7 +330,7 @@ class Solution:
 
 ### 广搜
 
-
+#### 双向BFS
 
 
 
@@ -383,6 +473,10 @@ class Solution:
 
 ### 区间动规
 
+周赛题T1547切棍子的最小成本与上面的记忆化搜索里的戳气球是典型的区间动规。
+
+经典例题如LeetCode的T546——移除盒子。
+
 ### 树状动规
 
 
@@ -482,7 +576,37 @@ class Solution:
 
 ## 图
 
+### 单源最短路径
 
+Dijkstra算法
+
+下面这道题就是变形，只不过改成了乘法概率最大，那么取个对数就是Dijkstra模板。所以不取对数，直接累乘当然可以，精度更高。
+
+```python
+#T1514 概率最大的路径
+class Solution:
+    def maxProbability(self, n: int, edges: List[List[int]], succProb: List[float], start: int, end: int) -> float:
+        graph = collections.defaultdict(list)
+        for i, (x, y) in enumerate(edges):
+            graph[x].append((succProb[i], y))
+            graph[y].append((succProb[i], x))
+        
+        que = [(-1.0, start)]
+        prob = [0.0] * n
+        prob[start] = 1.0
+
+        while que:
+            pr, node = heapq.heappop(que)
+            pr = -pr
+            if pr < prob[node]:
+                continue
+            for prNext, nodeNext in graph[node]:
+                if prob[nodeNext] < prob[node] * prNext:
+                    prob[nodeNext] = prob[node] * prNext
+                    heapq.heappush(que, (-prob[nodeNext], nodeNext))
+        
+        return prob[end]
+```
 
 
 
@@ -587,3 +711,169 @@ class Solution:
 【求落单元素】经典位运算，首先，如果要找出双元素数组中唯一落单的那个，可以直接异或。如果有两个落单的，可以异或得到两个数的异或值，然后找到出现不同的位置，用与运算将原数组分为两类，一类中包含一个落单的，并且相同的数字一定在同一类中。对两类分别累计异或即可得到想要的两个值。
 
 【注意】学习reduce的用法，另外，python3中reduce放在functools里面，而不是像Python2那样作为内置函数
+
+### 高精度乘法
+
+真python式写法：str(int(num1)*int(num2))
+
+假python式写法
+
+```python
+class Solution:
+    def multiply(self, num1: str, num2: str) -> str:
+
+        a = num1[::-1]
+        b = num2[::-1]
+        res = 0
+
+        for i, x in enumerate(b):
+            temp_res = 0
+            for j, y in enumerate(a):
+                temp_res += int(x) * int(y) * 10 ** j
+            res += temp_res * 10 ** i
+
+        return str(res)
+```
+
+C式python写法
+
+```python
+class Solution:
+    def multiply(self, num1: str, num2: str) -> str:
+        if num1 == '0' or num2 =='0':
+            return '0'
+        def chr2num(c:chr)->int:
+            return ord(c)-ord('0')
+        len1, len2 = len(num1), len(num2)
+        ans = [0 for i in range(len1+len2)]
+        for i in range(len1):
+            for j in range(len2):
+                ans[i+j] += chr2num(num1[len1-i-1])*chr2num(num2[len2-j-1])
+        for i in range(len1+len2):
+            if ans[i]>=10:
+                ans[i+1]+=ans[i]//10
+                ans[i] = ans[i]%10
+        ans.reverse()
+        if ans[0]==0:
+            ans.remove(ans[0])
+        for i in range(len(ans)):
+            ans[i] = chr(ans[i]+48)
+        return "".join(ans)
+```
+
+卷积大法（补：FFT？？？:)  ）
+
+```python
+#Copyright by Sx
+import numpy as np
+class Solution:
+    def multiply(self, num1: str, num2: str) -> str:
+        if num1=='0' or num2 == '0':
+            return '0'
+        num1, num2 = list(num1), list(num2)
+        n1 = [int(num1[i]) for i in range(len(num1))]
+        n2 = [int(num2[i]) for i in range(len(num2))]
+        n = np.convolve(n1,n2,'full')
+        n = list(n)
+        for i in range(len(n)-1,0,-1):
+            n[i-1]+=n[i]//10
+            n[i] = n[i]%10
+        if n[0]>10:
+            tmp = n[0]//10
+            n[0] = n[0]%10
+            n.insert(0,tmp)
+        while n[0] == 0:
+            n.remove(0)
+            if len(n)==1:
+                break
+        ans = [str(n[i]) for i in range(len(n))]
+        return "".join(ans)
+```
+
+最后是FFT版的
+
+```c++
+//Copyright by unkown others, using C++ language
+class Solution {
+public:
+    using CP = complex <double>;
+    
+    static constexpr int MAX_N = 256 + 5;
+
+    double PI;
+    int n, aSz, bSz;
+    CP a[MAX_N], b[MAX_N], omg[MAX_N], inv[MAX_N];
+
+    void init() {
+        PI = acos(-1);
+        for (int i = 0; i < n; ++i) {
+            omg[i] = CP(cos(2 * PI * i / n), sin(2 * PI * i / n));
+            inv[i] = conj(omg[i]);
+        }
+    }
+
+    void fft(CP *a, CP *omg) {
+        int lim = 0;
+        while ((1 << lim) < n) ++lim;
+        for (int i = 0; i < n; ++i) {
+            int t = 0;
+            for (int j = 0; j < lim; ++j) {
+                if((i >> j) & 1) t |= (1 << (lim - j - 1));
+            }
+            if (i < t) swap(a[i], a[t]);
+        }
+        for (int l = 2; l <= n; l <<= 1) {
+            int m = l / 2;
+            for (CP *p = a; p != a + n; p += l) {
+                for (int i = 0; i < m; ++i) {
+                    CP t = omg[n / l * i] * p[i + m];
+                    p[i + m] = p[i] - t;
+                    p[i] += t;
+                }
+            }
+        }
+    }
+
+    string run() {
+        n = 1;
+        while (n < aSz + bSz) n <<= 1;
+        init();
+        fft(a, omg);
+        fft(b, omg);
+        for (int i = 0; i < n; ++i) a[i] *= b[i];
+        fft(a, inv);
+        int len = aSz + bSz - 1;
+        vector <int> ans;
+        for (int i = 0; i < len; ++i) {
+            ans.push_back(int(round(a[i].real() / n)));
+        }
+        // 处理进位
+        int carry = 0;
+        for (int i = ans.size() - 1; i >= 0; --i) {
+            ans[i] += carry;
+            carry = ans[i] / 10;
+            ans[i] %= 10;
+        }
+        string ret;
+        if (carry) {
+            ret += to_string(carry);
+        }
+        for (int i = 0; i < ans.size(); ++i) {
+            ret.push_back(ans[i] + '0');
+        }
+        // 处理前导零
+        int zeroPtr = 0;
+        while (zeroPtr < ret.size() - 1 && ret[zeroPtr] == '0') ++zeroPtr;
+        return ret.substr(zeroPtr, INT_MAX);
+    }
+
+    string multiply(string num1, string num2) {
+        aSz = num1.size();
+        bSz = num2.size();
+        for (int i = 0; i < aSz; ++i) a[i].real(num1[i] - '0');
+        for (int i = 0; i < bSz; ++i) b[i].real(num2[i] - '0');
+        return run();
+    }
+};
+```
+
