@@ -326,6 +326,57 @@ class Solution:
 
 【思考】当然也可以这样：用map来记录可否使用，放置每个皇后时，考虑由这个皇后引入的“新增”的禁用区域，回溯时只释放“新增”的禁用区域即可。
 
+【24点】这道题状态的擦除值得注意，另外，对除零情况的考虑和跳过也非常有意思。本题的难点在于如何处理括号。自己写的代码可读性很差，官方代码对常变量的定义以及计算顺序的处理都很值得借鉴。
+
+```python
+#T679 24点游戏
+class Solution:
+    def judgePoint24(self, nums: List[int]) -> bool:
+        def compute(num:List[int])-> bool:
+            n = len(num)
+            if n == 1:
+                return abs(num[0]-24)<0.000001
+            for i in range(n-1):
+                for j in range(i+1,n):
+                    new = []
+                    for k in range(n):
+                        if k!=i and k!=j:
+                            new.append(num[k])
+                    a, b = num[i], num[j]
+                    for t in range(6):
+                        if t == 0:
+                            new.append(a+b)
+                            if compute(new):
+                                return True
+                        elif t == 1:
+                            new.append(a*b)
+                            if compute(new):
+                                return True
+                        elif t == 2:
+                            if b == 0:
+                                continue
+                            new.append(a/b)
+                            if compute(new):
+                                return True
+                        elif t == 3:
+                            if a == 0:
+                                continue
+                            new.append(b/a)
+                            if compute(new):
+                                return True
+                        elif t == 4:
+                            new.append(a-b)
+                            if compute(new):
+                                return True
+                        elif t == 5:
+                            new.append(b-a)
+                            if compute(new):
+                                return True
+                        new.pop()
+            return False
+        return compute(nums)
+```
+
 
 
 ### 广搜
