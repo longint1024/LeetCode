@@ -838,6 +838,34 @@ def __init__(self):
 
 
 
+**T201 数字范围按位与 //python3**
+
+【思路】本题的算法是我自己想出来的，跟官方题解有所不同，但时间效率几乎一样高。可以统计每一个bit位跨几位后会翻转，计算一下最小周期，然后，只需要对区间的一头一尾做按位与，然后把一定是零的部分bit位置零即可。uan
+
+```python
+#t201 数字范围按位与 my own methods
+class Solution:
+    def rangeBitwiseAnd(self, m: int, n: int) -> int:
+        x = n-m
+        ans = m&n
+        cnt = 0
+        while x>0:
+            x = x >> 1
+            ans = ans >> 1
+            cnt += 1
+        ans = ans << cnt
+        return ans
+```
+
+```python
+#t201 数字范围按位与 official solution
+class Solution:
+    def rangeBitwiseAnd(self, m: int, n: int) -> int:
+        while n>m:
+            n = n&(n-1)
+        return n
+```
+
 **T202 快乐数 //python3**
 
 【思路】循环判断，模拟
