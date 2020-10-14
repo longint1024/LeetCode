@@ -1222,6 +1222,16 @@ class Solution:
 
 ### T1000~
 
+**T1002 查找常用字符 //python3**
+
+什么叫真正的python啊（战术后仰）
+
+```python
+class Solution:
+    def commonChars(self, A: List[str]) -> List[str]:
+        return list(reduce(lambda x, y: x & y, map(collections.Counter, A)).elements())
+```
+
 **T1013 将数组分为和相等的三部分 //python3**
 
 【思路】首先求和，然后判断能否被3整除，不能的话直接返回False。然后我就开始了我天秀的想当然操作。其实只要将和分成三份，在累积求和的过程中发现第一份出现，在那之后发现第二份出现（并且不是在末尾出现，防止0,0），就可以了。但是我给它加了个提前判断返回（没有考虑负数），结果这题交了7遍，，，
