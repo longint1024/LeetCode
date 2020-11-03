@@ -12,6 +12,28 @@ del list[j]    #：删掉index为j的列表元素，此操作在关于list的循
 list.insert(i,a)    #：在index为i的位置增添a元素，其后元素依次后移一位
 ```
 
+【注意】特别注意数组越界问题，特别是按条件分块遍历数组时
+
+```python
+#T941 有效的山脉数组
+class Solution:
+    def validMountainArray(self, A: List[int]) -> bool:
+        up, n = 1, len(A)
+        if n<3:
+            return False
+        if A[1]<A[0]:
+            return False
+        while up<n and A[up]>A[up-1]:
+            up += 1
+        if up == n:
+            return False
+        while up<n and A[up]<A[up-1]:
+            up += 1
+        return up==n
+```
+
+
+
 ### 字符串
 
 ```python
