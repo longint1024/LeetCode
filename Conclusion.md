@@ -743,9 +743,57 @@ def gcd(a:int,b:int)->int:
 
 ### 双指针
 
-快慢指针：
+**快慢指针**：
 
-O(1)空间复杂度不改变链表索引查询链表是否有环
+首先我想结合这个东西谈谈，做题如何有简明的思路，比如T283移动零，这是一道简单题，要求原地操作
+
+```python
+#T283 移动零，第一遍代码
+class Solution:
+    def moveZeroes(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        point1, point2, n = 0, 0, len(nums)
+        while point2<n and nums[point2] == 0:
+            point2 += 1
+        if point2 == n:
+            return nums
+        while 1:
+            while point1<point2 and nums[point1]!=0:
+                point1 += 1
+            tmp = nums[point1]
+            nums[point1] = nums[point2]
+            nums[point2] = tmp
+            point2 += 1
+            while point2<n and nums[point2] == 0:
+                point2 += 1
+            if point2 == n:
+                return nums
+```
+
+这就是很混乱的思路，大概意思是point2指向当前第一个非零元素，point1指向point2左边的第一个零元素，两个交换一下，然后point2右移。和正确思路相比，其实意思差不多，但实现起来，因为理解的不够深入，所以代码写得很糟糕。
+
+```python
+#T283 移动零，第二遍代码
+class Solution:
+    def moveZeroes(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        point1, point2, n = 0, 0, len(nums)
+        while point2<n:
+            if nums[point2]!=0:
+                if point1<point2:
+                    nums[point1], nums[point2] = nums[point2], nums[point1]
+                    
+                point1 += 1
+            point2 += 1
+```
+
+在想明白point1代表的意义之后就会明白，其实point1是已经维护好的序列里的第一个零（除非序列里面完全没有零），那它只在发生交换时往前动一个，动了之后它依然指向零。point2一定跑得更快，当它跑完之后，说明point1右边全是零，那么算法终止。
+
+还有些特殊的用法，比如龟兔赛跑，O(1)空间复杂度不改变链表索引查询链表是否有环
 
 ```python
 #T141 环形链表
